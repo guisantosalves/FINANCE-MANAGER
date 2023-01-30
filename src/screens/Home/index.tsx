@@ -60,8 +60,8 @@ export default function Home() {
           <Text style={{ fontSize: 15, color: "#FFFFFF" }}>Objetivo</Text>
         </View>
         <View style={style.boxValuecontainerTwo}>
-          <Text style={{ fontSize: 23, fontWeight: "600", color: "#FFFFFF" }}>
-            R$ 8.000,0
+          <Text style={{ fontSize: 40, fontWeight: "600", color: "#FFFFFF" }}>
+            R$ 8.000,00
           </Text>
         </View>
       </View>
