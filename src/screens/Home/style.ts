@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 
 export const style = StyleSheet.create({
   containerMain: {
-    flex: 1,
+    height: Dimensions.get("window").height,
     backgroundColor: "#012626",
-    justifyContent:'space-around',
+    justifyContent: "space-around",
   },
   containerOne: {
     flexDirection: "row",
@@ -36,10 +37,10 @@ export const style = StyleSheet.create({
     marginBottom: 8,
   },
   boxtypeofspentcontainerThree: {
-    width:'100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   containerFour: {
     marginHorizontal: 25,
@@ -50,6 +51,6 @@ export const style = StyleSheet.create({
     padding: 5,
     paddingHorizontal: 15,
     marginRight: 12,
-    backgroundColor: '#027368'
-  }
+    backgroundColor: "#027368",
+  },
 });

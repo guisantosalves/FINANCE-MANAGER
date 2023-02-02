@@ -20,21 +20,42 @@ export function insertingIntoWallet(balance: string, date: Date) {
       `insert into wallet(balance, date) values (?, ?);`,
       [balance, date.toISOString()],
       (_txtObj, result) => {
-        console.log(result);
+        if (result.rowsAffected > 0) {
+          alert("salvo com sucesso");
+        }
       }
     );
   });
 }
 
-export async function findWallet() {
-  try {
-    db.transaction((tx) => {
-      tx.executeSql(`select * from wallet`, [], (_, data) =>
-        console.log(JSON.stringify(data))
-      ),
-        null;
+export function removingFromWallet(balance: string) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `insert into wallet(balance, date) values (?, ?);`,
+      [-balance, new Date().toISOString()],
+      (_txtObj, result) => {
+        if (result.rowsAffected > 0) {
+          alert("salvo com sucesso");
+        }
+      }
+    );
+  });
+}
+
+export function findByIdAndUpdate(id: number, newBalance: string) {
+  db.transaction((tx) => {
+    tx.executeSql(`update wallet set balance = ? where id = ?`),
+      [id.toString(), newBalance],
+      (_txtObj: any, result: any) => {
+        alert("atualizado com sucesso");
+      };
+  });
+}
+
+export function findWallet() {
+  db.transaction((tx) => {
+    tx.executeSql(`select * from wallet`, [], (_, data) => {
+      return data.rows._array;
     });
-  } catch (e) {
-    return Status.error;
-  }
+  });
 }

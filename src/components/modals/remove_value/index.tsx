@@ -7,22 +7,20 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { style } from "./style";
 import { MaterialIcons } from "@expo/vector-icons";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Button from "../../Button";
-import { insertingIntoWallet } from "../../../service/walletService";
-import { findWallet } from "../../../service/walletService";
-import SQLite from "expo-sqlite";
-import { db } from "../../../repository/db";
+import { removingFromWallet } from "../../../service/walletService";
 
 type Props = {
   openModal: boolean;
   setStateModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function InserValueModal(props: Props) {
+export default function RemoveValueModal(props: Props) {
   const [money, SetMoney] = React.useState<string>();
 
   const styling = StyleSheet.create({
@@ -36,6 +34,21 @@ export default function InserValueModal(props: Props) {
       backgroundColor: "#92E3A9",
     },
   });
+
+  function verifyingUser() {
+    Alert.alert("Confirmação", "Deseja mesmo retirar esse valor ?", [
+      {
+        text: "Cancelar",
+        onPress: () => console.log("cancela"),
+        style: "cancel",
+      },
+      {
+        text: "Sim",
+        onPress: () => removingFromWallet(money!),
+        style: "default",
+      },
+    ]);
+  }
 
   return (
     <GestureRecognizer onSwipeDown={() => props.setStateModal(false)}>
@@ -55,7 +68,7 @@ export default function InserValueModal(props: Props) {
           </View>
           <View style={style.containerBody}>
             <View>
-              <Text style={style.fontMain}>Qual valor você quer guardar?</Text>
+              <Text style={style.fontMain}>Quanto deseja retirar ?</Text>
             </View>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <TextInput
@@ -71,7 +84,7 @@ export default function InserValueModal(props: Props) {
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <Button
                 title="salvar"
-                funct={() => insertingIntoWallet(money!, new Date())}
+                funct={() => verifyingUser()}
                 style={styling.button}
               />
             </View>
