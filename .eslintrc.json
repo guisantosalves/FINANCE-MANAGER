@@ -1,0 +1,45 @@
+{
+    "env": {
+      "browser": true, // Allows for the use of predefined global variables for browsers (document, window, etc.)
+      "jest": true, // Allows for the use of predefined global variables for Jest (describe, test, etc.)
+      "node": true // Allows for the use of predefined global variables for Node.js (module, process, etc.)
+    },
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:prettier/recommended",
+      "prettier"
+    ],
+    "parser": "@typescript-eslint/parser", // Specifies the ESLint parser
+    "parserOptions": {
+      "ecmaVersion": 2020, // Allows for the parsing of modern ECMAScript features
+      "ecmaFeatures": {
+        "jsx": true // Allows for the parsing of JSX
+      },
+      "sourceType": "module" // Allows for the use of imports
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "prettier",
+      "react"
+    ],
+    "settings": {
+      "react": {
+        "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+      }
+    },
+    "rules": {
+      "react/display-name": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ]
+    }
+  }
