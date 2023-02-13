@@ -45,6 +45,10 @@ export const style = StyleSheet.create({
   containerFour: {
     marginHorizontal: 25,
     marginBottom: 25,
+    backgroundColor: '#e69a93',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
   },
   card: {
     borderRadius: 8,

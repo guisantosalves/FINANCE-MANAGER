@@ -22,7 +22,7 @@ type Props = {
 
 export default function RemoveValueModal(props: Props) {
   const [money, SetMoney] = React.useState<string>();
-
+  
   const styling = StyleSheet.create({
     button: {
       alignItems: "center",

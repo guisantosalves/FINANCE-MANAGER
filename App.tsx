@@ -5,22 +5,22 @@ import Home from "./src/screens/Home";
 import Spent from "./src/screens/Spent";
 import React from "react";
 import { createTableWallet } from "./src/service/walletService";
+import { createTableGoal } from "./src/service/goalService";
 import { db } from "./src/repository/db";
+import Values from "./src/screens/Values";
 
 export type RootStackParamList = {
   Home: undefined;
   Spent: undefined;
+  Values: undefined;
 };
 
 export default function App() {
   const RootStack = createNativeStackNavigator<RootStackParamList>();
 
   React.useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "create table if not exists wallet (id integer primary key not null, balance text, date text);"
-      );
-    });
+    createTableWallet();
+    createTableGoal();
   }, []);
 
   return (
@@ -28,6 +28,7 @@ export default function App() {
       <RootStack.Navigator>
         <RootStack.Screen name="Home" component={Home} options={opt.home} />
         <RootStack.Screen name="Spent" component={Spent} options={opt.spent} />
+        <RootStack.Screen name="Values" component={Values} options={opt.value}/>
       </RootStack.Navigator>
     </NavigationContainer>
   );
@@ -40,4 +41,7 @@ const opt = {
   spent: {
     headerShown: false,
   },
+  value: {
+    headerShown: false,
+  }
 };

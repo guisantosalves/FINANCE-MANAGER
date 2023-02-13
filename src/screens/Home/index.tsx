@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   View,
   Text,
@@ -6,24 +6,27 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
-  RefreshControl,
-} from "react-native";
-import { findWallet } from "../../service/walletService";
-import { style } from "./style";
-import { typeOfSpent } from "../../types/data.t";
-import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../App";
-import { useNavigation } from "@react-navigation/native";
-import { Wallet } from "../../entities/wallet";
-import { db } from "../../repository/db";
+  RefreshControl
+} from 'react-native';
+import { findWallet } from '../../service/walletService';
+import { style } from './style';
+import { typeOfSpent } from '../../types/data.t';
+import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../App';
+import { useNavigation } from '@react-navigation/native';
+import { Wallet } from '../../entities/wallet';
+import { db } from '../../repository/db';
+import InsertGoal from '../../components/modals/insert_goal';
 
-type navigationProps = NativeStackNavigationProp<RootStackParamList, "Spent">;
+type navigationProps = NativeStackNavigationProp<RootStackParamList, 'Spent'>;
 
 export default function Home() {
   const navigation = useNavigation<navigationProps>();
   const [ValueSavedTotal, setValueSavedTotal] = React.useState<number>(0);
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const [valueGoal, setValueGoal] = React.useState<number>();
 
   React.useEffect(() => {
     fetchingData();
@@ -40,33 +43,42 @@ export default function Home() {
     db.transaction((tx) => {
       tx.executeSql(`select * from wallet`, [], (_, data) => {
         const responseFromDb = data.rows._array;
-        let qtd = 0;
+        let qtd: number = 0;
         responseFromDb.forEach((item, index) => {
           if (item.balance != null) {
-            qtd = qtd + item.balance;
+            qtd = qtd + Number(item.balance);
           }
         });
         setValueSavedTotal(qtd);
+      });
+      tx.executeSql(`select * from goal`, [], (_, data) => {
+        const responseFromDb = data.rows._array;
+        // get only the last value from table
+        setValueGoal(Number(responseFromDb[responseFromDb.length - 1].value));
       });
     });
   }
 
   const data: typeOfSpent[] = [
     {
-      name: "laser",
+      name: 'laser',
       icon: {
-        key: "FontAwesome",
-        value: "money",
-      },
+        key: 'FontAwesome',
+        value: 'money'
+      }
     },
     {
-      name: "food",
+      name: 'food',
       icon: {
-        key: "Ionicons",
-        value: "fast-food",
-      },
-    },
+        key: 'Ionicons',
+        value: 'fast-food'
+      }
+    }
   ];
+
+  function getGoalValueFromModal(value: number) {
+    console.log(value);
+  }
 
   return (
     <ScrollView
@@ -74,59 +86,68 @@ export default function Home() {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          colors={["#FFFFFF"]}
-          tintColor={"#FFFFFF"}
+          colors={['#FFFFFF']}
+          tintColor={'#FFFFFF'}
         />
       }
-      style={{ backgroundColor: "#012626" }}
+      style={{ backgroundColor: '#012626' }}
     >
+      <InsertGoal
+        openModal={openModal}
+        setStateModal={setOpenModal}
+        getValue={getGoalValueFromModal}
+      />
       <SafeAreaView style={style.containerMain}>
         <View style={style.containerOne}>
           <View>
-            <Text style={{ color: "#FFFFFF" }}>Valor guardado</Text>
-            <Text style={{ color: "#FFFFFF" }}>R$ {ValueSavedTotal}</Text>
+            <Text style={{ color: '#FFFFFF' }}>Valor guardado</Text>
+            <Text style={{ color: '#FFFFFF' }}>R$ {ValueSavedTotal}</Text>
           </View>
           <AntDesign
             name="pluscircle"
             size={35}
-            color={"#027368"}
+            color={'#027368'}
             onPress={() => {
-              navigation.navigate("Spent");
+              navigation.navigate('Spent');
             }}
           />
         </View>
-        <View style={style.containerTwo}>
+        <TouchableOpacity
+          style={style.containerTwo}
+          activeOpacity={0.8}
+          onPress={() => setOpenModal(true)}
+        >
           <View style={{ marginTop: 5 }}>
-            <Text style={{ fontSize: 15, color: "#FFFFFF" }}>Objetivo</Text>
+            <Text style={{ fontSize: 15, color: '#FFFFFF' }}>Objetivo</Text>
           </View>
           <View style={style.boxValuecontainerTwo}>
-            <Text style={{ fontSize: 40, fontWeight: "600", color: "#FFFFFF" }}>
-              R$ 8.000,00
+            <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>
+              R$ {valueGoal?.toString()}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <View>
           <View style={style.containerThree}>
             <View style={style.boxtypeofspentcontainerThree}>
-              <Text style={{ fontSize: 15, color: "#FFFFFF" }}>
-                Tipos de gastos
-              </Text>
+              <Text style={{ fontSize: 15, color: '#FFFFFF' }}>Gastos Mensais</Text>
               <AntDesign
                 name="pluscircle"
                 size={35}
-                color={"#027368"}
+                color={'#027368'}
                 onPress={() => {
-                  console.log("salve");
+                  navigation.navigate('Values');
                 }}
               />
             </View>
           </View>
-          <View style={style.containerFour}>
-            <FlatList
-              data={data}
-              renderItem={({ item }) => CardTypeOfSpent(item)}
-              horizontal={true}
-            />
+          <View
+            style={style.containerFour}
+          >
+            <View style={style.boxValuecontainerTwo}>
+              <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>
+                R$ -2000
+              </Text>
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -137,10 +158,10 @@ export default function Home() {
 function CardTypeOfSpent(item: typeOfSpent) {
   return (
     <TouchableOpacity style={style.card} onPress={() => console.log(item.name)}>
-      {item.icon.key == "FontAwesome" ? (
-        <FontAwesome name={"money"} size={60} color={"#dcdcdc"} />
+      {item.icon.key == 'FontAwesome' ? (
+        <FontAwesome name={'money'} size={60} color={'#dcdcdc'} />
       ) : (
-        <Ionicons name={"fast-food"} size={60} color={"#dcdcdc"} />
+        <Ionicons name={'fast-food'} size={60} color={'#dcdcdc'} />
       )}
     </TouchableOpacity>
   );
