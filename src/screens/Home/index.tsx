@@ -27,6 +27,7 @@ export default function Home() {
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [valueGoal, setValueGoal] = React.useState<number>();
+  const [sumOfAllSpents, setsumOfAllSpents] = React.useState<number>(0);
 
   React.useEffect(() => {
     fetchingData();
@@ -56,25 +57,15 @@ export default function Home() {
         // get only the last value from table
         setValueGoal(Number(responseFromDb[responseFromDb.length - 1].value));
       });
+      tx.executeSql(`select * from spent`, [], (_, data) => {
+        let qtd = 0;
+        data.rows._array.map((item, index) => {
+          qtd = qtd + item.value;
+        });
+        setsumOfAllSpents(qtd);
+      });
     });
   }
-
-  const data: typeOfSpent[] = [
-    {
-      name: 'laser',
-      icon: {
-        key: 'FontAwesome',
-        value: 'money'
-      }
-    },
-    {
-      name: 'food',
-      icon: {
-        key: 'Ionicons',
-        value: 'fast-food'
-      }
-    }
-  ];
 
   function getGoalValueFromModal(value: number) {
     console.log(value);
@@ -140,29 +131,13 @@ export default function Home() {
               />
             </View>
           </View>
-          <View
-            style={style.containerFour}
-          >
+          <View style={style.containerFour}>
             <View style={style.boxValuecontainerTwo}>
-              <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>
-                R$ -2000
-              </Text>
+              <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>R$ -{sumOfAllSpents}</Text>
             </View>
           </View>
         </View>
       </SafeAreaView>
     </ScrollView>
-  );
-}
-
-function CardTypeOfSpent(item: typeOfSpent) {
-  return (
-    <TouchableOpacity style={style.card} onPress={() => console.log(item.name)}>
-      {item.icon.key == 'FontAwesome' ? (
-        <FontAwesome name={'money'} size={60} color={'#dcdcdc'} />
-      ) : (
-        <Ionicons name={'fast-food'} size={60} color={'#dcdcdc'} />
-      )}
-    </TouchableOpacity>
   );
 }
