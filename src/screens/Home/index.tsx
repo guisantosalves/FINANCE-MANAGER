@@ -47,7 +47,11 @@ export default function Home() {
         let qtd: number = 0;
         responseFromDb.forEach((item, index) => {
           if (item.balance != null) {
-            qtd = qtd + Number(item.balance);
+            if (item.balance.indexOf(',') > -1) {
+              qtd = qtd + Number(item.balance.replace(',', '.'));
+            } else {
+              qtd = qtd + Number(item.balance);
+            }
           }
         });
         setValueSavedTotal(qtd);
@@ -60,7 +64,9 @@ export default function Home() {
       tx.executeSql(`select * from spent`, [], (_, data) => {
         let qtd = 0;
         data.rows._array.map((item, index) => {
-          qtd = qtd + item.value;
+          if (item.value != null) {
+            qtd = qtd + Number(item.value);
+          }
         });
         setsumOfAllSpents(qtd);
       });
@@ -92,16 +98,27 @@ export default function Home() {
         <View style={style.containerOne}>
           <View>
             <Text style={{ color: '#FFFFFF' }}>Valor guardado</Text>
-            <Text style={{ color: '#FFFFFF' }}>R$ {ValueSavedTotal}</Text>
+            <Text style={{ color: '#FFFFFF' }}>R$ {ValueSavedTotal.toFixed(2)}</Text>
           </View>
-          <AntDesign
-            name="pluscircle"
-            size={35}
-            color={'#027368'}
-            onPress={() => {
-              navigation.navigate('Spent');
-            }}
-          />
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <AntDesign
+              name="pluscircle"
+              size={35}
+              color={'#027368'}
+              onPress={() => {
+                navigation.navigate('Spent');
+              }}
+              style={{ marginRight: 10 }}
+            />
+            <Ionicons
+              name="document-text"
+              size={40}
+              color="#027368"
+              onPress={() => {
+                navigation.navigate('Reports');
+              }}
+            />
+          </View>
         </View>
         <TouchableOpacity
           style={style.containerTwo}
@@ -133,7 +150,9 @@ export default function Home() {
           </View>
           <View style={style.containerFour}>
             <View style={style.boxValuecontainerTwo}>
-              <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>R$ -{sumOfAllSpents}</Text>
+              <Text style={{ fontSize: 40, fontWeight: '600', color: '#FFFFFF' }}>
+                R$ -{sumOfAllSpents.toString()}
+              </Text>
             </View>
           </View>
         </View>

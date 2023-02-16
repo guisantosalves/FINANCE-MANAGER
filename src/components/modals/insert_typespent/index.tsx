@@ -47,7 +47,6 @@ export default function InsertTypeSpent(props: Props) {
     db.transaction((tx) => {
       tx.executeSql(`select * from typespent`, [], (_, data) => {
         if (dataTypeOfSpent) {
-          console.log(data.rows._array);
           setdataTypeOfSpent(data.rows._array);
         }
       });
@@ -106,7 +105,8 @@ export default function InsertTypeSpent(props: Props) {
                     typeOfSpent === '' ||
                     typeOfSpent === undefined ||
                     typeOfSpent === null ||
-                    typeOfSpent.length <= 2
+                    typeOfSpent.length <= 2 || 
+                    !isClicked
                   ) {
                     alert('insira valores válidos');
                     return;
@@ -140,7 +140,6 @@ export default function InsertTypeSpent(props: Props) {
                           {
                             text: 'Sim',
                             onPress: () => {
-                              console.log('entrou');
                               db.transaction((tx) => {
                                 tx.executeSql(
                                   `delete from typespent where id=?`,

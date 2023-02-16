@@ -10,11 +10,13 @@ import { createTableTypeSpent } from './src/service/typeSpent';
 import { db } from './src/repository/db';
 import Values from './src/screens/Values';
 import { createTableSpent } from './src/service/spents';
+import Reports from './src/screens/reports';
 
 export type RootStackParamList = {
   Home: undefined;
   Spent: undefined;
   Values: undefined;
+  Reports: undefined;
 };
 
 export default function App() {
@@ -33,6 +35,7 @@ export default function App() {
         <RootStack.Screen name="Home" component={Home} options={opt.home} />
         <RootStack.Screen name="Spent" component={Spent} options={opt.spent} />
         <RootStack.Screen name="Values" component={Values} options={opt.value} />
+        <RootStack.Screen name="Reports" component={Reports} options={opt.reports} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
@@ -46,6 +49,9 @@ const opt = {
     headerShown: false
   },
   value: {
+    headerShown: false
+  },
+  reports: {
     headerShown: false
   }
 };

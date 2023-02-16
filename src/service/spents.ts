@@ -1,3 +1,4 @@
+import { spentData } from 'entities/spent';
 import { db } from '../repository/db';
 
 export async function createTableSpent() {

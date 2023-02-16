@@ -66,7 +66,13 @@ export default function InsertGoal(props: Props) {
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Button
                 title="salvar"
-                funct={() => insertingIntoGoals(money!, new Date())}
+                funct={() => {
+                  if (money && money.indexOf(',') > -1) {
+                    insertingIntoGoals(money, new Date());
+                  }else{
+                    insertingIntoGoals(money!, new Date());
+                  }
+                }}
                 style={styling.button}
               />
             </View>

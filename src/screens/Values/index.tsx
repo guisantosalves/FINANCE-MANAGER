@@ -41,6 +41,14 @@ function Values() {
   }
 
   function handleSave() {
+    if (valueOfSpent && valueOfSpent.indexOf(',') > -1 ) {
+      alert('insira valores válidos');
+      return;
+    }
+    if (valueOfSpent && valueOfSpent.indexOf('.') > -1 ) {
+      alert('insira valores válidos');
+      return;
+    }
     if (valueOfSpent && valueOfSpent.length > 0 && isClicked) {
       db.transaction((tx) => {
         tx.executeSql(

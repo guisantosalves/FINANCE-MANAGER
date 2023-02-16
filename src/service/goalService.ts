@@ -10,14 +10,26 @@ export async function createTableGoal() {
 
 export function insertingIntoGoals(value: string, date: Date) {
   db.transaction((tx) => {
-    tx.executeSql(
-      `insert into goal(value, date) values (?, ?);`,
-      [value, date.toISOString()],
-      (_txtObj, result) => {
-        if (result.rowsAffected > 0) {
-          alert('salvo com sucesso');
+    if (value.indexOf(',') > -1) {
+      tx.executeSql(
+        `insert into goal(value, date) values (?, ?);`,
+        [value.replace(',', '.'), date.toISOString()],
+        (_txtObj, result) => {
+          if (result.rowsAffected > 0) {
+            alert('salvo com sucesso');
+          }
         }
-      }
-    );
+      );
+    } else {
+      tx.executeSql(
+        `insert into goal(value, date) values (?, ?);`,
+        [value, date.toISOString()],
+        (_txtObj, result) => {
+          if (result.rowsAffected > 0) {
+            alert('salvo com sucesso');
+          }
+        }
+      );
+    }
   });
 }

@@ -15,41 +15,44 @@ enum Status {
 }
 
 export function insertingIntoWallet(balance: string, date: Date) {
-  db.transaction((tx) => {
-    tx.executeSql(
-      `insert into wallet(balance, date) values (?, ?);`,
-      [balance, date.toISOString()],
-      (_txtObj, result) => {
-        if (result.rowsAffected > 0) {
-          alert('salvo com sucesso');
-        }
-      }
-    );
-  });
-}
-
-export function removingFromWallet(balance: string) {
-  db.transaction((tx) => {
-    let qtd = 0;
-    tx.executeSql(`select * from wallet`, [], (_, data) => {
-      const responseFromDb = data.rows._array;
-      responseFromDb.forEach((item, index) => {
-        qtd = qtd + Number(item.balance);
-      });
-    });
-    if (Number(balance) <= qtd) {
+  if (balance.indexOf(',') > -1) {
+    db.transaction((tx) => {
       tx.executeSql(
         `insert into wallet(balance, date) values (?, ?);`,
-        [-balance, new Date().toISOString()],
+        [balance.replace(',', '.'), date.toISOString()],
         (_txtObj, result) => {
           if (result.rowsAffected > 0) {
             alert('salvo com sucesso');
           }
         }
       );
-    }else{
-      alert('insira um valor correto');
-    }
+    });
+  } else {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `insert into wallet(balance, date) values (?, ?);`,
+        [balance, date.toISOString()],
+        (_txtObj, result) => {
+          if (result.rowsAffected > 0) {
+            alert('salvo com sucesso');
+          }
+        }
+      );
+    });
+  }
+}
+
+export function removingFromWallet(balance: string) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `insert into wallet(balance, date) values (?, ?);`,
+      [Number(-balance), new Date().toISOString()],
+      (_txtObj, result) => {
+        if (result.rowsAffected > 0) {
+          alert('salvo com sucesso');
+        }
+      }
+    );
   });
 }
 
